@@ -10,20 +10,18 @@ var app        = express();
 var bodyParser = require("body-parser");
 var morgan     = require("morgan");
 var mongoose   = require("mongoose");
-var apiRoutes  = require("./app/routes/api")(app, express);
-
 
 //APP Configuration
 // use body parser to grab information from POST requests
-app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // configure app to handle CORS requests
 app.use(function(req, res, next) {
-res.setHeader('Access-Control-Allow-Origin', '*');
-res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-next();
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+	next();
 });
 
 // log all requests to the console
@@ -35,8 +33,8 @@ var db;
 // Connect to the database before starting the application server.
 var localDatabase = "mongodb://localhost/list-app";
 var productionDatabase = process.env.MONGODB_URI;
-//mongoose.connect(localDatabase, function(err, database) {
-mongoose.connect(productionDatabase, function(err, database) {
+mongoose.connect(localDatabase, function(err, database) {
+//mongoose.connect(productionDatabase, function(err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
@@ -54,11 +52,13 @@ mongoose.connect(productionDatabase, function(err, database) {
 });
 
 
-//ROUTES FOR API
+//ROUTES
+
+//api routes
+var apiRoutes  = require("./app/routes/api")(app, express);
+app.use("/api", apiRoutes);
 
 //basic route for home page
 app.get("/", function(req, res) {
 	res.send("Welcome to the homepage")
 });
-
-app.use("/api", apiRoutes);
