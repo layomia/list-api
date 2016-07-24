@@ -39,14 +39,10 @@ module.exports = function(app, express) {
 			user.save(function(err) {
 			
 				if (err) {
-					//duplicate entry
-					if (err.code == 11000)
-						return res.json({ success: false, message: "A user with either that username or that password already exists." });
-					else
-						return res.send(err);
+					return res.send(err);
 				}
 				
-				res.json({ message: "User created!", user_id: user.id });
+				res.json({ errmsg: "Nil", message: "User created!", user_id: user.id });
 			
 			});
 		})
