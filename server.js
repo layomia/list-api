@@ -33,8 +33,8 @@ var db;
 // Connect to the database before starting the application server.
 var localDatabase = "mongodb://localhost/list-app";
 var productionDatabase = process.env.MONGODB_URI;
-mongoose.connect(localDatabase, function(err, database) {
-//mongoose.connect(productionDatabase, function(err, database) {
+//mongoose.connect(localDatabase, function(err, database) {
+mongoose.connect(productionDatabase, function(err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
