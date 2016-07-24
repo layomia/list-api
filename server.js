@@ -9,8 +9,8 @@ var express    = require("express");
 var app        = express(); 
 var bodyParser = require("body-parser");
 var morgan     = require("morgan");
-var mongodb    = require("mongodb");
-var ObjectID   = mongodb.ObjectId;
+var mongoose   = require("mongoose");
+var apiRoutes  = require("./app/routes/api")(app, express);
 
 
 //APP Configuration
@@ -29,12 +29,14 @@ next();
 // log all requests to the console
 app.use(morgan('dev'));
 
-
 // Database variable outside of database connection callback to reuse connection pool in app
 var db;
 
 // Connect to the database before starting the application server.
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function(err, database) {
+var localDatabase = "mongodb://localhost/list-app";
+var productionDatabase = process.env.MONGODB_URI;
+//mongoose.connect(localDatabase, function(err, database) {
+mongoose.connect(productionDatabase, function(err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
@@ -51,4 +53,12 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function(err, database) {
   });
 });
 
+
 //ROUTES FOR API
+
+//basic route for home page
+app.get("/", function(req, res) {
+	res.send("Welcome to the homepage")
+});
+
+app.use("/api", apiRoutes);
