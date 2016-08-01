@@ -64,14 +64,14 @@ module.exports = function(app, express) {
 	apiRouter.post("/authenticate_user", function(req, res) {
 		
 		// find the user
-		// select the name username and password explicitly
+		// select the name email and password explicitly
 		User.findOne({
-			username: req.body.username
-		}).select('username password').exec(function(err, user) {
+			email: req.body.email
+		}).select('email password').exec(function(err, user) {
 
 			if (err) throw err;
 
-			// no user with that username was found
+			// no user with that email was found
 			if (!user) {
 				res.json({
 					success: false,
