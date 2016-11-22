@@ -5,6 +5,7 @@
 //  Copyright © 2016 Oluwalayomi Akinrinade. All rights reserved.
 
 var User = require("../models/user");
+var List = require("../models/list");
 
 module.exports = function(app, express) {
 	
@@ -152,6 +153,53 @@ module.exports = function(app, express) {
 					return res.send(err);
 				else
 					res.json({ message: 'Successfully deleted' });
+			});
+		});
+		
+	apiRouter.route('/lists')
+		.post(function(req, res) {
+			// new instance of List model
+			var list = new List();
+			
+			// set lists information (which comes from request)
+			list.owner = req.body.user_id;
+			list.name  = req.body.name;
+			list.description  = req.body.description;
+			list.groceries = req.body.groceries;
+			list.imgName     = req.body.imgName;
+			list.funds  = req.body.funds;
+			
+			list.save(function(err) {
+				if (err) {
+					return res.send(err);
+				}
+				res.json({ errmsg: "Nil", message: "List created!", list_id: list.id });
+			});
+		})
+		
+		.get(function(req, res) {
+			//attempt to find all users
+			List.find(function(err, lists) {
+				//if error, return error
+				if (err)
+					res.send(err);
+				
+				//return all users
+				res.json(lists);
+			});
+		});
+	
+	apiRouter.route('/lists/:user_id')
+
+		// get the lists associated with this user id
+		// (accessed at GET https://endorse-backend-api.herokuapp.com/api/lists/:user_id)
+		.get(function(req, res) {
+			console.log(req.params.user_id);
+			List.find({owner: req.params.user_id}, function(err, lists) {
+				if (err) 
+					res.send(err);
+				// return all lists
+				res.json(lists);
 			});
 		});
 	

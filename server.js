@@ -54,9 +54,11 @@ mongoose.connect(currentDatabase, function(err, database) {
 
 //ROUTES
 
-//api routes
 var apiRoutes  = require("./app/routes/api")(app, express);
+var shopRoutes = require("./app/routes/shop")(app, express);
+
 app.use("/api", apiRoutes);
+app.use("/shop", shopRoutes);
 
 //basic route for home page
 app.get("/", function(req, res) {

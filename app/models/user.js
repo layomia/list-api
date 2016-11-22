@@ -15,7 +15,8 @@ var UserSchema = new Schema({
 	 lastName: { type: String, required: true },
 	 username: { type: String, required: true, index: { unique: true } },
 	    email: { type: String, required: true, index: { unique: true } },
-	 password: { type: String, required: true, select: false }
+	 password: { type: String, required: true, select: false },
+	    //lists: [{ type: Schema.Types.ObjectId, ref: 'List' }]
 }, {
 	timestamps: true
 });
